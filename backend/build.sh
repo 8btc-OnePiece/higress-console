@@ -7,4 +7,5 @@ if [ -n "$DEV" ]; then
     BUILD_ARGS="$BUILD_ARGS -Dapp.build.dev=$DEV"
 fi
 ./mvnw clean package -Dmaven.test.skip=true -Dcheckstyle.skip=true -Dpmd.language=en $BUILD_ARGS
-docker  build -t higress-console:0.0.1 -f Dockerfile .
+#docker  build -t higress-console:0.0.1 -f Dockerfile .
+docker buildx build --platform=linux/amd64 -t higress-console:0.0.1 -f Dockerfile .
