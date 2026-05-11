@@ -14,10 +14,10 @@ import { addGatewayRoute, deleteGatewayRoute, getGatewayRoutes, getWasmPlugins, 
 import store from '@/store';
 import switches from '@/switches';
 import { isInternalResource } from '@/utils';
-import { ExclamationCircleOutlined, RedoOutlined, SearchOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, RedoOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useRequest } from 'ahooks';
-import { Alert, Button, Col, Drawer, Form, Input, message, Modal, Row, Space, Table, Typography, Select } from 'antd';
+import { Alert, Button, Col, Drawer, Form, message, Modal, Popover, Row, Select, Space, Table, Tag, Typography } from 'antd';
 import { history } from 'ice';
 import React, { useEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -33,9 +33,13 @@ interface RouteFormProps {
   methods: string[];
   path: RoutePredicate;
   urlParams: KeyedRoutePredicate[];
-  services: string[];
+  services: UpstreamService[];
   customConfigs: {
     [key: string]: string;
+  };
+  authConfig?: {
+    enabled: boolean;
+    allowedConsumers?: string[];
   };
 }
 
@@ -88,10 +92,11 @@ const RouteList: React.FC = () => {
           value &&
           value.map((service: UpstreamService, index: number) => {
             const name = upstreamServiceToString(service);
+            const weight = service.weight ?? 0;
             return (
-              <span key={service.name}>
+              <span key={service.name} title={`${name} (${Math.max(0, weight)}%)`}>
                 {index !== 0 && (<br />)}
-                {name}
+                {name} {weight > 0 ? `(${weight}%)` : <span style={{ color: '#faad14' }}>(0%)</span>}
               </span>
             );
           })
@@ -102,6 +107,7 @@ const RouteList: React.FC = () => {
       title: t('aiRoute.columns.auth'),
       dataIndex: ['authConfig', 'allowedConsumers'],
       key: 'authConfig.allowedConsumers',
+      width: 300,
       render: (value, record) => {
         const { authConfig } = record;
         if (!authConfig || !authConfig.enabled) {
@@ -110,14 +116,24 @@ const RouteList: React.FC = () => {
         if (!Array.isArray(value) || !value.length) {
           return t('aiRoute.authEnabledWithoutConsumer')
         }
-        return value.map((consumer: string, index: number) => {
-          return (
-            <span key={consumer}>
-              {index !== 0 && (<br />)}
-              {consumer}
-            </span>
-          );
-        });
+        const maxDisplay = 3;
+        const displayed = value.slice(0, maxDisplay);
+        const remaining = value.length - maxDisplay;
+        const popoverContent = (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: 300, overflow: 'auto' }}>
+            {value.map((c: string) => <div key={c}>{c}</div>)}
+          </div>
+        );
+        return (
+          <Popover content={popoverContent}>
+            <Space direction="vertical" size={4}>
+              {displayed.map((consumer: string) => (
+                <Tag key={consumer} style={{ maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{consumer}</Tag>
+              ))}
+              {remaining > 0 && <Tag>+{remaining}</Tag>}
+            </Space>
+          </Popover>
+        );
       },
     },
     {
@@ -245,6 +261,14 @@ const RouteList: React.FC = () => {
       path && normalizeRoutePredicate(path);
       headers && headers.forEach((h) => normalizeRoutePredicate(h));
       urlParams && urlParams.forEach((h) => normalizeRoutePredicate(h));
+
+      // Validate weights before submitting
+      const weightSum = services.reduce((acc, s) => acc + (s.weight || 0), 0);
+      if (weightSum !== 100) {
+        message.error(t('route.weightTable.invalidSum', { sum: weightSum }));
+        return;
+      }
+
       const route: Route = {
         name,
         domains,
@@ -254,11 +278,11 @@ const RouteList: React.FC = () => {
         urlParams,
         customConfigs,
         authConfig,
-        services: services.map((service) => {
-          return {
-            name: service,
-          };
-        }),
+        services: services.map((service) => ({
+          name: service.name,
+          port: service.port,
+          weight: service.weight,
+        })),
       };
       if (currentRoute) {
         route.version = currentRoute.version;
@@ -550,9 +574,10 @@ const RouteList: React.FC = () => {
                 </Option>
 
                 {/* 提取所有的唯一allowedConsumers值 */}
-                {[...new Set(originalDataSource.flatMap(item =>
-                  item.authConfig?.allowedConsumers || []))].map(consumer => (<Option key={consumer} value={consumer}>{consumer}</Option>
-                ))}
+                {
+                  [...new Set(originalDataSource.flatMap(item => item.authConfig?.allowedConsumers || []))]
+                    .map(consumer => (<Option key={consumer} value={consumer}>{consumer}</Option>))
+                }
               </Select>
             </Form.Item>
           </Col>

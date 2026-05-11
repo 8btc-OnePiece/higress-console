@@ -6,6 +6,10 @@ export const getWasmPlugins = (lang: string): Promise<any> => {
   return request.get('/v1/wasm-plugins', { params: { lang } });
 };
 
+export const getWasmPlugin = (name: string, lang?: string): Promise<any> => {
+  return request.get(`/v1/wasm-plugins/${name}`, { params: { lang } });
+};
+
 // 获取全局的指定插件配置
 export const getPluginsDetail = ({ pluginName }): Promise<any> => {
   return request.get(`/v1/global/plugin-instances/${pluginName}`);
@@ -31,6 +35,11 @@ export const getWasmPluginsConfig = (name: string) => {
 // 获取全局的指定插件配置
 export const getGlobalPluginInstance = (pluginName: string) => {
   return request.get<any, any>(`/v1/global/plugin-instances/${pluginName}`);
+};
+
+// 获取所有全局插件配置列表
+export const getGlobalPluginInstances = () => {
+  return request.get<any, any>('/v1/global/plugin-instances');
 };
 
 // 修改全局的指定插件配置
@@ -70,4 +79,10 @@ export const getDomainPluginInstance = (params: { name: string; pluginName: stri
 export const updateDomainPluginInstance = (params: { name: string; pluginName: string }, payload) => {
   const { name, pluginName } = params;
   return request.put<any, any>(`/v1/domains/${name}/plugin-instances/${pluginName}`, payload);
+};
+
+export const getWasmPluginReadme = (name: string, lang?: string): Promise<string> => {
+  return request.get<any, string>(`/v1/wasm-plugins/${name}/readme`, {
+    params: { lang },
+  });
 };

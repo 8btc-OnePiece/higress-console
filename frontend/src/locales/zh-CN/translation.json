@@ -5,7 +5,6 @@
     "commercial": "Higress 企业版",
     "developers": "开发者",
     "blog": "博客",
-    "community": "社区",
     "download": "下载"
   },
   "menu": {
@@ -78,7 +77,9 @@
         "serviceName": "服务名称",
         "serviceWeight": "请求比例",
         "services": "目标AI服务",
-        "modelPredicates": "模型匹配规则"
+        "modelPredicates": "模型匹配规则",
+        "customConfigs": "附加注解（Annotation）",
+        "customConfigsTip": "点击问号查看注解配置说明"
       },
       "rule": {
         "matchTypeRequired": "请选择匹配方式",
@@ -114,6 +115,7 @@
     "deleteConfirmation": "确定删除 <1>{{currentRouteName}}</1> 吗？",
     "authNotEnabled": "未开启认证",
     "authEnabledWithoutConsumer": "未授权任何人访问",
+    "viewConsumers": "查看消费者",
     "usage": "使用方法",
     "aiRouteUsage": "AI路由使用方法",
     "aiRouteUsageContent": "可使用以下命令发送请求：",
@@ -277,9 +279,16 @@
         "openaiCustomServiceHost": "自定义 OpenAI 服务主机域",
         "openaiCustomServicePath": "自定义 OpenAI 服务路径",
         "zhipuDomain": "自定义智谱 AI 域名",
+        "claudeServerType": "Claude 服务类型",
+        "claudeCustomUrl": "自定义 Claude 服务 Base URL",
+        "claudeCustomServerType": "自定义 Claude 服务配置方式",
+        "claudeCustomService": "自定义 Claude 服务",
+        "claudeCustomServiceHost": "自定义 Claude 服务主机域",
+        "claudeCustomServicePath": "自定义 Claude 服务路径",
         "claudeVersion": "Claude API 版本",
         "claudeCodeMode": "Claude Code 模式（OAuth 令牌）",
-        "zhipuCodePlanMode": "Code Plan 模式"
+        "zhipuCodePlanMode": "Code Plan 模式",
+        "vllmCustomUrl": "自定义 vLLM 服务 BaseURL"
       },
       "rules": {
         "tokenRequired": "请输入凭证",
@@ -293,6 +302,8 @@
         "protocol": "请选择请求协议",
         "successThresholdRequired": "请输入最小连续健康检测成功次数",
         "azureServiceUrlRequired": "请输入 Azure 服务 URL",
+        "azureServiceUrlMissingApiVersion": "Azure 服务 URL 必须包含 api-version 查询参数且其值不能为空",
+        "azureServiceUrlInvalid": "Azure 服务 URL 格式不合法",
         "ollamaServerHostRequired": "请输入 Ollama 服务主机名",
         "ollamaServerPortRequired": "请输入 Ollama 服务端口",
         "openaiCustomUrlRequired": "请输入合法的自定义 OpenAI 服务 BaseURL",
@@ -302,6 +313,13 @@
         "openaiCustomUrlInconsistentContextPaths": "各个自定义 OpenAI 服务 BaseURL 所使用的路径不一致",
         "openaiCustomServiceRequired": "请选择自定义 OpenAI 服务",
         "openaiCustomServicePathRequired": "请输入定义 OpenAI 服务路径",
+        "claudeCustomUrlRequired": "请输入合法的自定义 Claude 服务 Base URL",
+        "invalidClaudeCustomUrl": "URL 格式不正确：",
+        "claudeCustomUrlMultipleValuesWithIpOnly": "仅支持指定多个使用 IP 和端口的自定义 Claude 服务 Base URL",
+        "claudeCustomUrlInconsistentProtocols": "各个自定义 Claude 服务 Base URL 所使用的协议不一致",
+        "claudeCustomUrlInconsistentContextPaths": "各个自定义 Claude 服务 Base URL 所使用的路径不一致",
+        "claudeCustomServiceRequired": "请选择自定义 Claude 服务",
+        "claudeCustomServicePathRequired": "请输入自定义 Claude 服务路径",
         "qwenFileIdRequired": "请输入通义千问文件 ID",
         "qwenDomainRequired": "请输入合法的自定义通义千问域名",
         "awsRegionRequired": "请输入 AWS Region",
@@ -314,7 +332,12 @@
         "vertexAuthKeyBadRequiredProperty": "Google Cloud 服务账号密钥中缺少必要的属性：{{key}}",
         "geminiSafetyCategoryRequired": "请输入危害类别",
         "geminiSafetyCategoryDuplicated": "存在重复配置的危害类别",
-        "geminiSafetyThresholdRequired": "请输入屏蔽阈值"
+        "geminiSafetyThresholdRequired": "请输入屏蔽阈值",
+        "vllmCustomUrlRequired": "请输入合法的自定义 vLLM 服务 BaseURL",
+        "invalidVllmCustomUrl": "URL 格式不正确：",
+        "vllmCustomUrlMultipleValuesWithIpOnly": "仅支持指定多个使用 IP 和端口的自定义 vLLM 服务 BaseURL",
+        "vllmCustomUrlInconsistentProtocols": "各个自定义 vLLM 服务 BaseURL 所使用的协议不一致",
+        "vllmCustomUrlInconsistentContextPaths": "各个自定义 vLLM 服务 BaseURL 所使用的路径不一致"
       },
       "tooltips": {
         "qwenFileIdsTooltip": "通过文件接口上传至 Dashscope 的文件 ID，其内容将被用做 AI 对话的上下文。",
@@ -333,7 +356,11 @@
         "openaiCustomServicePathPlaceholder": "示例：/v1",
         "qwenDomainPlaceholder": "示例：dashscope-finance.aliyuncs.com",
         "qwenFileIdsPlaceholder": "示例：file-fe-xxx",
-        "zhipuDomainPlaceholder": "示例：api.z.ai（国际版服务）"
+        "zhipuDomainPlaceholder": "示例：api.z.ai（国际版服务）",
+        "vllmCustomUrlPlaceholder": "示例：http://192.168.0.1:8000/v1",
+        "claudeCustomUrlPlaceholder": "示例：https://api.anthropic.com 或 https://proxy.example.com/anthropic",
+        "claudeCustomServiceHostPlaceholder": "示例：api.anthropic.com",
+        "claudeCustomServicePathPlaceholder": "示例：/ 或 /anthropic"
       },
       "openaiServerType": {
         "official": "OpenAI 官方服务",
@@ -346,6 +373,14 @@
       "qwenServerType": {
         "official": "通义千问官方服务",
         "custom": "自定义服务"
+      },
+      "claudeServerType": {
+        "official": "Anthropic 官方服务",
+        "custom": "自定义服务"
+      },
+      "claudeCustomServerType": {
+        "service": "选择服务",
+        "url": "输入 URL"
       },
       "secretRefModal": {
         "entry": "我想引用保存在 Secret 中的凭证信息",
@@ -394,6 +429,14 @@
       "targetRoute": "作用路由：",
       "enableStatus": "开启状态",
       "globalConfigWarning": "注意：以上配置将会在所有域名和路由上生效。请谨慎配置。"
+    },
+    "readme": {
+      "tabTitle": "文档",
+      "empty": "暂无文档",
+      "loadError": "在线文档加载失败",
+      "openOnline": "查看在线文档",
+      "expandView": "放大查看",
+      "expandedTitle": "文档"
     },
     "builtIns": {
       "rewrite": {
@@ -535,9 +578,11 @@
       "domain": "注册中心地址",
       "domainTooltip": "注册中心地址，可以是IP或域名",
       "domainRequired": "请选择域名",
-      "domainPlaceholder": "支持大小写字母、数字、短划线（-）和星号（*），不超过256个字符。",
+      "domainPlaceholder": "支持小写字母、数字、短划线（-）和星号（*），不超过256个字符。",
+      "domainInvalidFormat": "格式无效，请输入有效的域名或 IP 地址。",
       "port": "注册中心访问端口",
       "portRequired": "请输入访问端口",
+      "portInvalidRange": "端口必须介于 1 和 65535 之间。",
       "portPlaceholder": "注册中心访问端口",
       "vport": "服务默认端口",
       "vportEnabled": "是否开启自定义服务端口",
@@ -662,7 +707,10 @@
         "matchType": "请选择条件",
         "matchValue": "请输入值"
       },
-      "parameter": "参数"
+      "parameter": "参数",
+      "decoded": "解码结果",
+      "encode": "编码",
+      "nonAsciiError": "不支持非ASCII字符，请点击按钮进行编码"
     },
     "keyValueGroup": {
       "columns": {
@@ -700,7 +748,18 @@
       "customConfigsTip": "点击问号查看注解配置说明",
       "targetService": "目标服务",
       "targetServiceRequired": "请选择目标服务",
-      "targetServiceNamedPlaceholder": "搜索服务名称选择服务，可多选"
+      "targetServiceNamedPlaceholder": "搜索服务名称选择服务，可多选",
+      "weightConfig": "权重配置"
+    },
+    "weightTable": {
+      "serviceName": "服务名",
+      "weight": "权重 (%)",
+      "action": "操作",
+      "delete": "删除此服务",
+      "equalDistribution": "一键均分",
+      "sumLabel": "总和: {{sum}}/100",
+      "invalidSum": "权重总和为 {{sum}}，需要调整为100",
+      "zeroWeightWarning": "此服务权重为0，不会接受流量"
     }
   },
   "system": {
