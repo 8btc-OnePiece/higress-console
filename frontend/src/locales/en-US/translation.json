@@ -417,6 +417,7 @@
     },
     "enabled": "Enabled",
     "emptyPlugins": "No plugins configured.",
+    "noPlugins": "No plugins",
     "addPlugin": "Add Plugin",
     "editPlugin": "Edit Plugin",
     "addSuccess": "Added successfully.",
@@ -525,6 +526,14 @@
       "authn": "AuthN",
       "authz": "AuthZ",
       "stats": "Stats"
+    },
+    "executionOrder": {
+      "title": "Execution Order",
+      "subtitle": "Runs phase by phase, then by priority descending",
+      "phase": "Phase",
+      "priority": "Priority",
+      "priorityShort": "P",
+      "emptyPhase": "No plugins in this phase"
     },
     "imagePullPolicy": {
       "unspecified": "Default",
