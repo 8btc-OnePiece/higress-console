@@ -19,6 +19,7 @@
     "domainManagement": "域名管理",
     "certManagement": "证书管理",
     "consumerManagement": "消费者管理",
+    "apiKeyManagement": "客户密钥管理",
     "pluginManagement": "插件配置",
     "systemSettings": "系统设置",
     "mcpManagement": "MCP管理",
@@ -416,6 +417,7 @@
     },
     "enabled": "已启用",
     "emptyPlugins": "未启用策略",
+    "noPlugins": "暂无插件",
     "addPlugin": "添加插件",
     "editPlugin": "编辑插件",
     "addSuccess": "添加成功",
@@ -524,6 +526,14 @@
       "authn": "认证阶段",
       "authz": "鉴权阶段",
       "stats": "统计阶段"
+    },
+    "executionOrder": {
+      "title": "执行顺序",
+      "subtitle": "按阶段逐步执行，阶段内按优先级降序",
+      "phase": "阶段",
+      "priority": "优先级",
+      "priorityShort": "P",
+      "emptyPhase": "该阶段暂无插件"
     },
     "imagePullPolicy": {
       "unspecified": "默认策略",

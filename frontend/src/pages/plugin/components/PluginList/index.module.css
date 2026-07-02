@@ -1,0 +1,309 @@
+.pluginListLayout {
+  --sidebar-sticky-top: 64px;
+  --sidebar-bottom: 24px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  align-items: start;
+  width: 100%;
+}
+
+.pluginListMain {
+  min-width: 0;
+}
+
+.pluginListSide {
+  align-self: stretch;
+  width: 320px;
+  min-width: 0;
+}
+
+.executionSidebar {
+  position: sticky;
+  top: var(--sidebar-sticky-top);
+  z-index: 10;
+  width: 100%;
+  max-height: calc(100vh - var(--sidebar-sticky-top) - var(--sidebar-bottom));
+  padding: 16px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sidebarTitle {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.sidebarSubtitle {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.phaseFlow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+}
+
+.phaseFlowItem {
+  min-width: 0;
+  text-align: center;
+}
+
+.phaseStep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1677ff;
+  background: #e6f4ff;
+  border: 1px solid #91caff;
+  border-radius: 50%;
+}
+
+.phaseFlowLabel {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(0, 0, 0, 0.65);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebarContent {
+  max-height: calc(100vh - var(--sidebar-sticky-top) - var(--sidebar-bottom) - 152px);
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.phaseSection {
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.phaseSectionHeader {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 8px;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.phaseSectionHeader:hover .phaseName {
+  color: #1677ff;
+}
+
+.phaseIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1677ff;
+  background: #fff;
+  border: 1px solid #91caff;
+  border-radius: 50%;
+}
+
+.phaseName {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.phaseCount {
+  min-width: 24px;
+  padding: 0 8px;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.45);
+  text-align: center;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.phaseToggleIcon {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.phaseConnector {
+  position: absolute;
+  top: 28px;
+  bottom: -4px;
+  left: 12px;
+  width: 1px;
+  background: #d9d9d9;
+}
+
+.phasePluginList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 32px;
+}
+
+.executionItem {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+}
+
+.executionItem:hover {
+  border-color: #91caff;
+}
+
+.executionItemMain {
+  min-width: 0;
+  flex: 1;
+}
+
+.executionItemTitle,
+.executionItemName {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.executionItemTitle {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.executionItemName {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.executionItemMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.priorityBadge {
+  padding: 0 6px;
+  font-size: 12px;
+  line-height: 20px;
+  color: #1677ff;
+  background: #e6f4ff;
+  border-radius: 4px;
+}
+
+.enabledDot {
+  font-size: 12px;
+  line-height: 18px;
+  color: #52c41a;
+}
+
+.emptyPhase {
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.45);
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.pluginCard {
+  scroll-margin-top: 96px;
+}
+
+.pluginCard :global(.ant-card-body) {
+  padding: 16px;
+}
+
+.pluginMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.65);
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+}
+
+.metaLabel {
+  margin-right: 4px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 1199px) {
+  .pluginListLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pluginListSide {
+    width: 100%;
+  }
+
+  .executionSidebar {
+    position: static;
+    width: 100%;
+    max-height: none;
+    margin-top: 8px;
+  }
+
+  .sidebarContent {
+    max-height: 420px;
+  }
+}

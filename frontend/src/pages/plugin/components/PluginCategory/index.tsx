@@ -16,11 +16,13 @@ interface Props {
   pluginList: WasmPluginData[];
   renderPluginItem: (item: WasmPluginData) => React.ReactNode;
   categoryList: CategoryItem[];
+  activeKeys?: string[];
+  onActiveKeysChange?: (keys: string[]) => void;
 }
 
 const PluginCategory = (props: Props) => {
   const { t } = useTranslation();
-  const { pluginList, renderPluginItem, categoryList = [] } = props;
+  const { pluginList, renderPluginItem, categoryList = [], activeKeys, onActiveKeysChange } = props;
 
   // Group plugins by category
   const groupedPlugins = useMemo(() => {
@@ -34,13 +36,16 @@ const PluginCategory = (props: Props) => {
     });
 
     return grouped;
-  }, [pluginList, categoryList]);
+  }, [pluginList]);
 
   return (
     <div className={styles.categoryContainer}>
       {categoryList.length > 0 ? (
         <Collapse
-          defaultActiveKey={categoryList.map(item => item.key)}
+          activeKey={activeKeys}
+          onChange={(keys) => {
+            onActiveKeysChange?.(Array.isArray(keys) ? keys : [keys]);
+          }}
           ghost
           expandIconPosition="start"
           bordered={false}
