@@ -26,7 +26,6 @@ import com.alibaba.higress.console.controller.dto.ApiKeyGroup;
 import com.alibaba.higress.console.controller.dto.ApiKeyInfo;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -101,7 +100,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
                 info.setCustomerName(obj.getString("api_key_name"));
                 info.setCustomerKey(obj.getString("api_key"));
 
-                // 从 groups 数组中提取 groupNames
+                // Extract group names from the groups array.
                 JSONArray groupsArray = obj.getJSONArray("groups");
                 List<String> groupNames = new ArrayList<>();
                 if (groupsArray != null && !groupsArray.isEmpty()) {

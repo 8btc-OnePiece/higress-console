@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.higress.sdk.model.consumer.KeyAuthCredential;
 import org.apache.commons.lang3.StringUtils;
 import org.springdoc.api.annotations.ParameterObject;
@@ -45,7 +44,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import java.util.List;
 
 @RestController("ConsumersController")
 @RequestMapping("/v1/consumers")
@@ -88,7 +86,7 @@ public class ConsumersController {
             if (apiKeyService != null) {
                 com.alibaba.higress.console.controller.dto.ApiKeyGroup group = new com.alibaba.higress.console.controller.dto.ApiKeyGroup();
                 group.setName(newConsumer.getName());
-                group.setKey(((KeyAuthCredential)consumer.getCredentials().get(0)).getValues().get(0));;
+                group.setKey(((KeyAuthCredential)consumer.getCredentials().get(0)).getValues().get(0));
                 apiKeyService.upsertGroup(group);
             }
         } catch (Exception e) {
@@ -128,7 +126,7 @@ public class ConsumersController {
             if (apiKeyService != null) {
                 com.alibaba.higress.console.controller.dto.ApiKeyGroup group = new com.alibaba.higress.console.controller.dto.ApiKeyGroup();
                 group.setName(updatedConsumer.getName());
-                group.setKey(((KeyAuthCredential)consumer.getCredentials().get(0)).getValues().get(0));;
+                group.setKey(((KeyAuthCredential)consumer.getCredentials().get(0)).getValues().get(0));
                 apiKeyService.upsertGroup(group);
             }
         } catch (Exception e) {
