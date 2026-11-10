@@ -17,10 +17,13 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springdoc.core.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.alibaba.higress.console.aop.AllowAnonymous;
 import com.alibaba.higress.console.constant.CapabilityKey;
+import com.alibaba.higress.console.constant.SystemConfigKey;
 import com.alibaba.higress.sdk.model.ai.AiRouteFallbackStrategy;
 import com.alibaba.higress.sdk.model.ai.LlmProviderProtocol;
 import com.alibaba.higress.sdk.model.ai.LlmProviderType;
@@ -33,30 +36,53 @@ import com.alibaba.higress.sdk.model.route.RoutePredicateTypeEnum;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.converter.ResolvedSchema;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class SwaggerConfig {
+
+    @Value("${higress-console.build.version:unknown}")
+    private String buildVersion;
+
+    @Value("${" + SystemConfigKey.ADMIN_COOKIE_NAME_KEY + ":" + SystemConfigKey.ADMIN_COOKIE_NAME_DEFAULT + "}")
+    private String cookieName;
 
     @Bean
     public GroupedOpenApi openApi() {
         return GroupedOpenApi.builder().group("Higress").displayName("Higress Console")
             .addOpenApiCustomiser(this::openApiCustomizer).packagesToScan("com.alibaba.higress.console.controller")
-            .build();
+            .addOperationCustomizer((operation, handler) -> {
+                if (!handler.hasMethodAnnotation(AllowAnonymous.class)
+                    && !handler.getBeanType().isAnnotationPresent(AllowAnonymous.class)) {
+                    operation.addSecurityItem(new SecurityRequirement().addList("basicAuth"));
+                    operation.addSecurityItem(new SecurityRequirement().addList("sessionCookie"));
+                }
+                return operation;
+            }).build();
     }
 
     @SuppressWarnings("rawtypes")
     private void openApiCustomizer(OpenAPI openApi) {
-        Info apiInfo = new Info().title("Higress Console")
+        Info apiInfo = new Info().title("Higress Console").version(buildVersion)
             .contact(new Contact().name("Higress Authors").url("https://github.com/higress-group/higress-console"))
             .description(
                 "Higress is a next-generation cloud-native gateway based on Alibaba's internal gateway practices.")
             .license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0"));
         openApi.info(apiInfo);
+        if (openApi.getComponents() == null) {
+            openApi.setComponents(new Components());
+        }
+        openApi.getComponents().addSecuritySchemes("basicAuth",
+            new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic"));
+        openApi.getComponents().addSecuritySchemes("sessionCookie",
+            new SecurityScheme().type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.COOKIE).name(cookieName));
 
         registerClassSchema(openApi, CapabilityKey.class);
         registerClassSchema(openApi, RoutePredicateTypeEnum.class);

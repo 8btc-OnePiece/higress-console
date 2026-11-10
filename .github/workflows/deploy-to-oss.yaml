@@ -65,7 +65,28 @@ jobs:
           helm repo add higress.io https://higress.cn/helm-charts
           helm install higress -n higress-system higress.io/higress \
             --create-namespace --set global.local=true
-          mvn clean verify -f ./backend/pom.xml -Papi-docs
+          # Bootstrap only the disposable Kind cluster used for document export.
+          python3 - <<'PYDOCS'
+          import base64, json, os, secrets, subprocess
+          username, password = "docs-export", secrets.token_hex(24)
+          auth = "Basic " + base64.b64encode(f"{username}:{password}".encode()).decode()
+          print(f"::add-mask::{password}")
+          print(f"::add-mask::{auth}")
+          values = {"adminUsername": username, "adminPassword": password,
+                    "adminDisplayName": "Docs Export", "key": secrets.token_hex(16),
+                    "iv": secrets.token_hex(8)}
+          secret = {"apiVersion": "v1", "kind": "Secret",
+                    "metadata": {"name": "higress-console", "namespace": "higress-system"},
+                    "type": "Opaque", "stringData": values}
+          subprocess.run(["kubectl", "--context", "kind-higress", "apply", "-f", "-"],
+                         input=json.dumps(secret), text=True, check=True,
+                         stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+          with open(os.environ["GITHUB_ENV"], "a") as env:
+              env.write(f"HIGRESS_CONSOLE_DOCS_AUTHORIZATION={auth}\n")
+          PYDOCS
+
+      - name: Export authenticated API Docs
+        run: mvn clean verify -f ./backend/pom.xml -Papi-docs
 
       - name: Upload API Docs to OSS
         run: |

@@ -239,6 +239,10 @@
 								</goals>
 								<configuration>
 									<apiDocsUrl>http://localhost:8080/v3/api-docs/Higress</apiDocsUrl>
+                                    <headers>
+                                        <Authorization>${env.HIGRESS_CONSOLE_DOCS_AUTHORIZATION}</Authorization>
+                                    </headers>
+                                    <failOnError>true</failOnError>
 								</configuration>
 							</execution>
 						</executions>

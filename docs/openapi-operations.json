@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "basis": "wujieai-main@25355d2",
+  "canonical_openapi_path": "/v3/api-docs/Higress",
+  "base_url": "https://test-higress-ui.wujieai.com",
+  "deployment_verified": false,
+  "authentication": [
+    "existing session cookie",
+    "HTTP Basic administrator credentials"
+  ],
+  "constraints": [
+    "New providers must be created manually; no automated provider creation",
+    "Read live schema and snapshot old route/plugin configuration before writes",
+    "A 200 plugin-instance response alone does not prove the plugin is installed or enabled",
+    "Do not execute database writes"
+  ],
+  "operations": [
+    {
+      "id": "session-login",
+      "method": "POST",
+      "path": "/session/login",
+      "auth": "anonymous",
+      "request_schema": "LoginRequest",
+      "read_only": false
+    },
+    {
+      "id": "service-source-list",
+      "method": "GET",
+      "path": "/v1/service-sources",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "service-source-get",
+      "method": "GET",
+      "path": "/v1/service-sources/{name}",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "service-source-create",
+      "method": "POST",
+      "path": "/v1/service-sources",
+      "auth": "admin",
+      "request_schema": "ServiceSource",
+      "read_only": false
+    },
+    {
+      "id": "provider-list",
+      "method": "GET",
+      "path": "/v1/ai/providers",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "provider-get",
+      "method": "GET",
+      "path": "/v1/ai/providers/{name}",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "ai-route-list",
+      "method": "GET",
+      "path": "/v1/ai/routes",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "ai-route-create",
+      "method": "POST",
+      "path": "/v1/ai/routes",
+      "auth": "admin",
+      "request_schema": "AiRoute",
+      "read_only": false
+    },
+    {
+      "id": "ai-route-get",
+      "method": "GET",
+      "path": "/v1/ai/routes/{name}",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "ai-route-update",
+      "method": "PUT",
+      "path": "/v1/ai/routes/{name}",
+      "auth": "admin",
+      "request_schema": "AiRoute",
+      "read_only": false
+    },
+    {
+      "id": "ai-route-delete",
+      "method": "DELETE",
+      "path": "/v1/ai/routes/{name}",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": false
+    },
+    {
+      "id": "route-list",
+      "method": "GET",
+      "path": "/v1/routes",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "balance-plugin-catalog",
+      "method": "GET",
+      "path": "/v1/wasm-plugins/user-balance-check",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "balance-plugin-instance",
+      "method": "GET",
+      "path": "/v1/routes/{routeName}/plugin-instances/user-balance-check",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    },
+    {
+      "id": "balance-plugin-configure",
+      "method": "PUT",
+      "path": "/v1/routes/{routeName}/plugin-instances/user-balance-check",
+      "auth": "admin",
+      "request_schema": "WasmPluginInstance",
+      "read_only": false
+    },
+    {
+      "id": "key-group-list",
+      "method": "GET",
+      "path": "/v1/api-keys/group/list",
+      "auth": "admin",
+      "request_schema": null,
+      "read_only": true
+    }
+  ],
+  "deployment_note": "This URL runs baseline 25355d2 from OPE-11244 build #9; the Swagger change has not been deployed."
+}

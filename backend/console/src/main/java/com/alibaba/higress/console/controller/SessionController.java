@@ -33,6 +33,8 @@ import com.alibaba.higress.console.service.SessionService;
 import com.alibaba.higress.sdk.exception.ValidationException;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,7 +57,9 @@ public class SessionController {
 
     @PostMapping("/login")
     @Operation(summary = "Login")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Logged in successfully."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Logged in successfully.",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+        @ApiResponse(responseCode = "401", description = "Incorrect username or password."),
         @ApiResponse(responseCode = "400", description = "Missing user name or password."),
         @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<Response<User>> login(@RequestBody LoginRequest request, HttpServletResponse response) {
