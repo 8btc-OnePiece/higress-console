@@ -68,10 +68,10 @@ spec:
             - name: HIGRESS_CONSOLE_CONTROLLER_WATCHED_NAMESPACE
               value: {{ .Values.global.watchNamespace }}
             {{- end }}
-            - name: SPRINGDOC_API_DOCS_ENABLED
+            {{- if not (hasKey .Values.podEnvs "HIGRESS_CONSOLE_API_DOCS_ENABLED") }}
+            - name: HIGRESS_CONSOLE_API_DOCS_ENABLED
               value: "{{ .Values.swagger.enabled }}"
-            - name: SPRINGDOC_SWAGGER_UI_ENABLED
-              value: "{{ .Values.swagger.enabled }}"
+            {{- end }}
             {{- if and .Values.global.enablePluginServer (not (hasKey .Values.podEnvs "HIGRESS_ADMIN_WASM_PLUGIN_CUSTOM_IMAGE_URL_PATTERN"))}}
             - name: HIGRESS_ADMIN_WASM_PLUGIN_CUSTOM_IMAGE_URL_PATTERN
               value: "{{ .Values.pluginServer.urlPattern }}"

@@ -16,6 +16,8 @@ header:
     - 'VERSION'
     - 'deploy/*'
     - 'helm/**'
+    - 'docs/swagger-openapi.md'
+    - 'docs/openapi-operations.json' # JSON contract data; comments are not supported.
     - 'backend/mvnw*'
     - 'backend/**/pom.xml'
     - 'backend/*.sh'
@@ -30,4 +32,4 @@ header:
   comment: on-failure
 dependency:
   files:
-    - pom.xml
+    - backend/pom.xml
