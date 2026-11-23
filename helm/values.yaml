@@ -108,6 +108,8 @@ web:
     prompt: "" # If set, a prompt message will be displayed on the login page.
 
 swagger:
+  # Uses the application's unified HIGRESS_CONSOLE_API_DOCS_ENABLED switch.
+  # An explicit podEnvs.HIGRESS_CONSOLE_API_DOCS_ENABLED takes precedence.
   enabled: false
 
 admin:

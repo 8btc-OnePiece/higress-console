@@ -1,5 +1,16 @@
 # Higress Console Swagger / OpenAPI
 
+## 当前交付状态（2026-11-23）
+
+控制台已在测试和生产上线；生产 Jenkins `APP/higress-console-prod/6` 成功，
+固定提交 `b1edb88285f38b1a8b5f12f49dc12d17c049d509`，266 项测试和 21 项生产接口检查通过。
+下方 11 月 10 日的基线及本地验证段落是历史记录，不代表当前线上状态。
+
+Helm 路径统一使用 `HIGRESS_CONSOLE_API_DOCS_ENABLED` 控制文档开关：
+`swagger.enabled` 默认 false；`podEnvs.HIGRESS_CONSOLE_API_DOCS_ENABLED` 显式值优先。
+已验证默认关闭、开启、显式 true/false 覆盖四种模板输出，无重复环境变量。
+本次 Helm 收尾未触发集群部署；当前 Jenkins 交付路径的线上版本不受模板修改影响。
+
 ## 基线与范围
 
 本改动从本地 `wujieai-main` 的 `25355d2` 开始（包含 `d3ed38c` 的 key-group 基线，以及已有插件执行顺序提交），不修改 Jenkins 流水线、数据库、提供者或业务路由。
