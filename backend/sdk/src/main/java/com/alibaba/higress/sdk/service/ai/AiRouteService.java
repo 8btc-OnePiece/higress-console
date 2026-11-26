@@ -27,4 +27,6 @@ public interface AiRouteService {
     void delete(String routeName);
 
     AiRoute update(AiRoute route);
+
+    AiRoute setEnabled(String routeName, String version, boolean enabled);
 }

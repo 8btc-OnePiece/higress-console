@@ -4,6 +4,7 @@ export interface AiRoute {
   key?: string;
   name: string;
   version?: string;
+  enabled?: boolean;
   domains: string[];
   pathPredicate: RoutePredicate;
   headerPredicates?: KeyedRoutePredicate[];

@@ -18,6 +18,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -187,6 +188,36 @@ class SwaggerAccessTests {
     }
 
     @Test
+    void routeStatusRequiresAuthenticationAndExplicitVersionAndState() throws Exception {
+        mvc.perform(put("/v1/ai/routes/example/status").contentType(MediaType.APPLICATION_JSON)
+            .content("{\"version\":\"1\",\"enabled\":false}"))
+            .andExpect(status().isUnauthorized());
+        Cookie cookie = login();
+        for (String body : new String[] {"{}", "{\"version\":\"1\"}", "{\"enabled\":false}"}) {
+            mvc.perform(put("/v1/ai/routes/example/status").cookie(cookie)
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isBadRequest());
+        }
+        org.mockito.Mockito.verify(aiRoutes, org.mockito.Mockito.never())
+            .setEnabled(anyString(), anyString(), org.mockito.ArgumentMatchers.anyBoolean());
+    }
+
+    @Test
+    void routeStatusReturnsDisabledRecordAndConflictsAreNotSuccess() throws Exception {
+        when(aiRoutes.setEnabled("example", "1", false)).thenReturn(
+            com.alibaba.higress.sdk.model.ai.AiRoute.builder().name("example").version("2").enabled(false).build());
+        Cookie cookie = login();
+        mvc.perform(put("/v1/ai/routes/example/status").cookie(cookie).contentType(MediaType.APPLICATION_JSON)
+            .content("{\"version\":\"1\",\"enabled\":false}"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.enabled").value(false))
+            .andExpect(jsonPath("$.version").value("2"));
+        when(aiRoutes.setEnabled("example", "old", false))
+            .thenThrow(new com.alibaba.higress.sdk.exception.ResourceConflictException());
+        mvc.perform(put("/v1/ai/routes/example/status").cookie(cookie).contentType(MediaType.APPLICATION_JSON)
+            .content("{\"version\":\"old\",\"enabled\":false}"))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
     void generatedContractIncludesCurrentControllersAndAuthentication() throws Exception {
         String body = mvc.perform(get("/v3/api-docs/Higress").cookie(login())).andExpect(status().isOk())
             .andExpect(header().string("Cache-Control", "no-store"))
@@ -194,6 +225,7 @@ class SwaggerAccessTests {
             .andExpect(jsonPath("$.info.version").isNotEmpty())
             .andReturn().getResponse().getContentAsString();
         JsonNode document = mapper.readTree(body);
+        assertThat(document.path("paths").path("/v1/ai/routes/{name}/status").has("put")).isTrue();
         for (String path : new String[] {"/v1/service-sources", "/v1/ai/providers", "/v1/ai/routes",
             "/v1/routes", "/v1/api-keys/group/list", "/v1/wasm-plugins/{name}",
             "/v1/routes/{routeName}/plugin-instances/{name}"}) {

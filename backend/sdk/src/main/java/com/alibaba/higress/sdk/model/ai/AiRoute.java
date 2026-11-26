@@ -45,6 +45,8 @@ public class AiRoute {
     private String name;
     @Schema(description = "Route version. Required when updating.")
     private String version;
+    @Schema(description = "Whether forwarding is enabled. Defaults to true for legacy routes. Disabling retains configuration and plugins.")
+    private Boolean enabled;
     @Schema(description = "Domains that the route applies to. If empty, the route applies to all domains.")
     private List<String> domains;
     @Schema(description = "Path predicate")

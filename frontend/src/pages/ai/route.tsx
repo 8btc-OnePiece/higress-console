@@ -3,7 +3,7 @@ import { AiRoute, AiUpstream } from '@/interfaces/ai-route';
 import { fetchPluginsByRoute, RoutePredicate } from '@/interfaces/route';
 import { WasmPluginData } from '@/interfaces/wasm-plugin';
 import { getI18nValue } from "@/pages/plugin/utils";
-import { addAiRoute, deleteAiRoute, getAiRoutes, updateAiRoute } from '@/services/ai-route';
+import { addAiRoute, deleteAiRoute, getAiRoutes, updateAiRoute, setAiRouteEnabled } from '@/services/ai-route';
 import { getWasmPlugins } from '@/services';
 import { ArrowRightOutlined, ExclamationCircleOutlined, RedoOutlined, SearchOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -28,6 +28,22 @@ const AiRouteList: React.FC = () => {
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
+    },
+    {
+      title: t('aiRoute.status.title'),
+      dataIndex: 'enabled',
+      key: 'enabled',
+      width: 90,
+      filters: [
+        { text: t('aiRoute.status.enabled'), value: true },
+        { text: t('aiRoute.status.disabled'), value: false },
+      ],
+      onFilter: (value, record: AiRoute) => (record.enabled !== false) === value,
+      render: (enabled: boolean) => (
+        <Tag color={enabled === false ? 'default' : 'green'}>
+          {t(enabled === false ? 'aiRoute.status.disabled' : 'aiRoute.status.enabled')}
+        </Tag>
+      ),
     },
     {
       title: t('aiRoute.columns.domains'),
@@ -145,10 +161,13 @@ const AiRouteList: React.FC = () => {
       title: t('misc.actions'),
       dataIndex: 'action',
       key: 'action',
-      width: 240,
+      width: 300,
       align: 'center' as const,
       render: (_, record) => (
         <Space size="small">
+          <a onClick={() => onToggleStatus(record)}>
+            {t(record.enabled === false ? 'aiRoute.status.enable' : 'aiRoute.status.disable')}
+          </a>
           <a onClick={() => onUsageDrawer(record)}>{t('aiRoute.usage')}</a>
           <a onClick={() => onEditConfig(record)}>{t('misc.strategy')}</a>
           <a onClick={() => onEditDrawer(record)}>{t('misc.edit')}</a>
@@ -173,6 +192,24 @@ const AiRouteList: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [pluginData, setPluginsData] = useState<Record<string, WasmPluginData[]>>({});
   const [pluginInfoList, setPluginInfoList] = useState<WasmPluginData[]>([]);
+
+  const onToggleStatus = (route: AiRoute) => {
+    const enabled = route.enabled === false;
+    Modal.confirm({
+      title: t(enabled ? 'aiRoute.status.enableTitle' : 'aiRoute.status.disableTitle', { name: route.name }),
+      content: t(enabled ? 'aiRoute.status.enableHint' : 'aiRoute.status.disableHint'),
+      okText: t('misc.confirm'),
+      cancelText: t('misc.cancel'),
+      onOk: async () => {
+        try {
+          await setAiRouteEnabled(route, enabled);
+          message.success(t('aiRoute.status.updated'));
+        } finally {
+          refresh();
+        }
+      },
+    });
+  };
 
   const { loading: wasmLoading, run: loadWasmPlugins } = useRequest(() => {
     return getWasmPlugins(i18n.language)

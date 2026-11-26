@@ -119,7 +119,19 @@
     "usage": "使用方法",
     "aiRouteUsage": "AI路由使用方法",
     "aiRouteUsageContent": "可使用以下命令发送请求：",
-    "searchPlaceholder": "根据路由名称、域名、路由条件和目标服务搜索路由"
+    "searchPlaceholder": "根据路由名称、域名、路由条件和目标服务搜索路由",
+    "status": {
+      "title": "路由状态",
+      "enabled": "启用",
+      "disabled": "禁用",
+      "enable": "启用",
+      "disable": "禁用",
+      "enableTitle": "启用路由 {{name}}？",
+      "disableTitle": "禁用路由 {{name}}？",
+      "enableHint": "恢复此路由的请求转发。请确认渠道和计费配置仍然有效。",
+      "disableHint": "停止此路由（含备用路由）的请求转发，保留列表记录、模型映射和插件配置，可随时重新启用。若模型还有其他匹配路由，仍可能通过其他路由访问。",
+      "updated": "路由状态已更新"
+    }
   },
   "consumer": {
     "columns": {

@@ -20,3 +20,10 @@ export const deleteAiRoute = (name: string): Promise<any> => {
 export const updateAiRoute = (payload: AiRoute): Promise<any> => {
   return request.put<any, any>(`/v1/ai/routes/${payload.name}`, payload);
 };
+
+export const setAiRouteEnabled = (route: AiRoute, enabled: boolean): Promise<AiRoute> => {
+  return request.put<any, AiRoute>(`/v1/ai/routes/${encodeURIComponent(route.name)}/status`, {
+    version: route.version,
+    enabled,
+  });
+};

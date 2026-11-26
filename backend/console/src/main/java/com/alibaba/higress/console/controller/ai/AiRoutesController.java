@@ -13,7 +13,6 @@
 package com.alibaba.higress.console.controller.ai;
 
 import javax.annotation.Resource;
-import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,8 +32,10 @@ import com.alibaba.higress.console.controller.dto.PaginatedResponse;
 import com.alibaba.higress.console.controller.dto.Response;
 import com.alibaba.higress.console.controller.util.ControllerUtil;
 import com.alibaba.higress.sdk.model.CommonPageQuery;
+import com.alibaba.higress.sdk.exception.ValidationException;
 import com.alibaba.higress.sdk.model.PaginatedResult;
 import com.alibaba.higress.sdk.model.ai.AiRoute;
+import com.alibaba.higress.sdk.model.ai.AiRouteStatusRequest;
 import com.alibaba.higress.sdk.service.ai.AiRouteService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,7 +96,7 @@ public class AiRoutesController {
         @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<Response<AiRoute>> put(@PathVariable("name") @NotBlank String name,
         @RequestBody AiRoute route) {
-        if (StringUtils.isNotEmpty(route.getName())) {
+        if (StringUtils.isEmpty(route.getName())) {
             route.setName(name);
         } else if (!StringUtils.equals(name, route.getName())) {
             throw new ValidationException("Route name in the URL doesn't match the one in the body.");
@@ -103,6 +104,17 @@ public class AiRoutesController {
         route.validate();
         AiRoute updatedRoute = aiRouteService.update(route);
         return ControllerUtil.buildResponseEntity(updatedRoute);
+    }
+
+    @PutMapping("/{name}/status")
+    @Operation(summary = "Enable or disable an AI route without deleting its configuration or plugins")
+    public ResponseEntity<AiRoute> setStatus(@PathVariable("name") @NotBlank String name,
+        @RequestBody AiRouteStatusRequest request) {
+        if (request.getEnabled() == null || StringUtils.isBlank(request.getVersion())) {
+            throw new ValidationException("enabled and current version are required.");
+        }
+        return ResponseEntity.ok(
+            aiRouteService.setEnabled(name, request.getVersion(), request.getEnabled()));
     }
 
     @DeleteMapping("/{name}")

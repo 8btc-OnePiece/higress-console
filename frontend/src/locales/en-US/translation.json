@@ -119,7 +119,19 @@
     "usage": "Usage",
     "aiRouteUsage": "AI Route Usage",
     "aiRouteUsageContent": "You can send a test request using the command below:",
-    "searchPlaceholder": "Search routes by route name, domain, routing conditions and target providers."
+    "searchPlaceholder": "Search routes by route name, domain, routing conditions and target providers.",
+    "status": {
+      "title": "Status",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "enable": "Enable",
+      "disable": "Disable",
+      "enableTitle": "Enable route {{name}}?",
+      "disableTitle": "Disable route {{name}}?",
+      "enableHint": "Resume forwarding. Confirm that upstream and billing settings are still valid.",
+      "disableHint": "Stop forwarding through this route and its fallback, retaining its list entry, model mappings and plugins for re-enabling. Other matching routes may still serve the model.",
+      "updated": "Route status updated"
+    }
   },
   "consumer": {
     "columns": {
