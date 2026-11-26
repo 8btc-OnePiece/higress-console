@@ -27,13 +27,14 @@ const AiRouteList: React.FC = () => {
       title: t('aiRoute.columns.name'),
       dataIndex: 'name',
       key: 'name',
+      width: 220,
       ellipsis: true,
     },
     {
       title: t('aiRoute.status.title'),
       dataIndex: 'enabled',
       key: 'enabled',
-      width: 90,
+      width: 110,
       filters: [
         { text: t('aiRoute.status.enabled'), value: true },
         { text: t('aiRoute.status.disabled'), value: false },
@@ -49,6 +50,7 @@ const AiRouteList: React.FC = () => {
       title: t('aiRoute.columns.domains'),
       dataIndex: 'domains',
       key: 'domains',
+      width: 230,
       render: (value) => {
         if (!Array.isArray(value) || !value.length) {
           return '-';
@@ -67,6 +69,7 @@ const AiRouteList: React.FC = () => {
       title: t('aiRoute.columns.pathPredicate'),
       dataIndex: 'pathPredicate',
       key: 'pathPredicate',
+      width: 220,
       render: (value: RoutePredicate, record: AiRoute) => {
         return <div>{`${t(`route.matchTypes.${value.matchType}`)} ｜ ${value.matchValue}`}</div>;
       },
@@ -75,6 +78,7 @@ const AiRouteList: React.FC = () => {
       title: t('aiRoute.columns.modelPredicates'),
       dataIndex: 'modelPredicates',
       key: 'modelPredicates',
+      width: 260,
       render: (value: RoutePredicate[], record: AiRoute) => {
         return (
           <div>
@@ -93,6 +97,7 @@ const AiRouteList: React.FC = () => {
       title: t('aiRoute.columns.upstreams'),
       dataIndex: 'upstreams',
       key: 'upstreams',
+      width: 180,
       render: (value: AiUpstream[], record: AiRoute) => {
         if (!Array.isArray(value) || !value.length) {
           return '-';
@@ -446,6 +451,7 @@ const AiRouteList: React.FC = () => {
         loading={loading || isLoading}
         dataSource={dataSource}
         columns={columns}
+        scroll={{ x: 1600 }}
         pagination={false}
         expandable={{
           expandedRowKeys: expandedKeys,
