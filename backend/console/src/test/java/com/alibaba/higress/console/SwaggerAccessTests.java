@@ -188,6 +188,23 @@ class SwaggerAccessTests {
     }
 
     @Test
+    void disabledAiRoutesRetainPluginAccessButUnknownRoutesAreRejected() throws Exception {
+        com.alibaba.higress.sdk.model.ai.AiRoute disabled = com.alibaba.higress.sdk.model.ai.AiRoute.builder()
+            .name("disabled").enabled(false).fallbackConfig(
+                com.alibaba.higress.sdk.model.ai.AiRouteFallbackConfig.builder().enabled(true).build()).build();
+        when(aiRoutes.query("disabled")).thenReturn(disabled);
+        Cookie cookie = login();
+        for (String routeName : new String[] {"ai-route-disabled.internal", "ai-route-disabled.fallback.internal"}) {
+            mvc.perform(get("/v1/routes/" + routeName + "/plugin-instances").cookie(cookie))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.success").value(true));
+            mvc.perform(get("/v1/routes/" + routeName + "/plugin-instances/user-balance-check").cookie(cookie))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data.pluginName").value("user-balance-check"));
+        }
+        mvc.perform(get("/v1/routes/ai-route-missing.internal/plugin-instances").cookie(cookie))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void routeStatusRequiresAuthenticationAndExplicitVersionAndState() throws Exception {
         mvc.perform(put("/v1/ai/routes/example/status").contentType(MediaType.APPLICATION_JSON)
             .content("{\"version\":\"1\",\"enabled\":false}"))

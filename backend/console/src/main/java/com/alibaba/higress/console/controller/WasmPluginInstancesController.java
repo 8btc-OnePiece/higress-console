@@ -30,6 +30,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.higress.sdk.service.ai.AiRouteService;
+import com.alibaba.higress.sdk.constant.CommonKey;
+import com.alibaba.higress.sdk.constant.HigressConstants;
+import com.alibaba.higress.sdk.model.ai.AiRoute;
 import com.alibaba.higress.console.controller.dto.PaginatedResponse;
 import com.alibaba.higress.console.controller.dto.Response;
 import com.alibaba.higress.console.controller.util.ControllerUtil;
@@ -63,6 +67,7 @@ public class WasmPluginInstancesController {
     private WasmPluginInstanceService wasmPluginInstanceService;
     private DomainService domainService;
     private RouteService routeService;
+    private AiRouteService aiRouteService;
     private ServiceService serviceService;
 
     @Resource
@@ -83,6 +88,11 @@ public class WasmPluginInstancesController {
     @Resource
     public void setRouteService(RouteService routeService) {
         this.routeService = routeService;
+    }
+
+    @Resource
+    public void setAiRouteService(AiRouteService aiRouteService) {
+        this.aiRouteService = aiRouteService;
     }
 
     @Autowired
@@ -297,9 +307,29 @@ public class WasmPluginInstancesController {
         if (StringUtils.isEmpty(routeName)) {
             throw new ValidationException("Route name is required.");
         }
-        if (routeService.query(routeName) == null) {
+        if (routeService.query(routeName) == null && !isRetainedAiRoute(routeName)) {
             throw new ValidationException("Unknown route: " + routeName);
         }
+    }
+
+    private boolean isRetainedAiRoute(String resourceName) {
+        String prefix = CommonKey.AI_ROUTE_PREFIX;
+        String suffix = HigressConstants.INTERNAL_RESOURCE_NAME_SUFFIX;
+        if (!resourceName.startsWith(prefix) || !resourceName.endsWith(suffix)) {
+            return false;
+        }
+        String name = resourceName.substring(prefix.length(), resourceName.length() - suffix.length());
+        if (aiRouteService.query(name) != null) {
+            return true;
+        }
+        String fallbackSuffix = HigressConstants.FALLBACK_ROUTE_NAME_SUFFIX;
+        if (name.endsWith(fallbackSuffix)) {
+            AiRoute route =
+                aiRouteService.query(name.substring(0, name.length() - fallbackSuffix.length()));
+            return route != null && route.getFallbackConfig() != null
+                && Boolean.TRUE.equals(route.getFallbackConfig().getEnabled());
+        }
+        return false;
     }
 
     private void validateServiceName(String serviceName) {
